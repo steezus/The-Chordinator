@@ -52,7 +52,7 @@
           "#!/bin/bash",
           "cd /home/ec2-user/the-chordinator",
           "if [ -f scripts/fetch-chordpro-from-github.mjs ]; then",
-          "  echo Fetching songs from {{ ChordProRepo }} (max {{ ChordProMaxSongs }}, .{{ ChordProExt }}, {{ ChordProBranch }})...",
+          "  echo Fetching songs from {{ ChordProRepo }} max {{ ChordProMaxSongs }} .{{ ChordProExt }} {{ ChordProBranch }}...",
           "  docker run --rm -v /home/ec2-user/the-chordinator:/app -w /app node:20-alpine node scripts/fetch-chordpro-from-github.mjs '{{ ChordProRepo }}' '{{ ChordProMaxSongs }}' '{{ ChordProExt }}' '{{ ChordProBranch }}' || echo 'Song fetch failed or skipped; continuing with build.'",
           "else",
           "  echo No fetch script found; skipping ChordPro fetch.",
