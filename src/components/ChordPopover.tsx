@@ -12,12 +12,17 @@ interface ChordPopoverProps {
   instrument: Instrument;
   anchorRect: DOMRect;
   onClose: () => void;
+  /** When set, popover is hover-only: no click-outside close, and use onMouseEnter/onMouseLeave for dismiss. */
+  hoverMode?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
-export function ChordPopover({ chordName, instrument, anchorRect, onClose }: ChordPopoverProps) {
+export function ChordPopover({ chordName, instrument, anchorRect, onClose, hoverMode, onMouseEnter, onMouseLeave }: ChordPopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (hoverMode) return;
     const handleClickOutside = (e: MouseEvent) => {
       if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) onClose();
     };
@@ -30,7 +35,7 @@ export function ChordPopover({ chordName, instrument, anchorRect, onClose }: Cho
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [onClose]);
+  }, [onClose, hoverMode]);
 
   const x = anchorRect.left + anchorRect.width / 2;
   const y = anchorRect.top;
@@ -55,7 +60,15 @@ export function ChordPopover({ chordName, instrument, anchorRect, onClose }: Cho
     );
 
   return createPortal(
-    <div ref={popoverRef} className={`chord-popover ${!showAbove ? 'chord-popover--below' : ''}`} style={style} role="dialog" aria-label={`Chord: ${chordName}`}>
+    <div
+      ref={popoverRef}
+      className={`chord-popover ${!showAbove ? 'chord-popover--below' : ''} ${hoverMode ? 'chord-popover--hover' : ''}`}
+      style={style}
+      role="dialog"
+      aria-label={`Chord: ${chordName}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <div className="chord-popover__arrow" />
       <div className="chord-popover__content">{content}</div>
     </div>,

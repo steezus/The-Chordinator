@@ -35,10 +35,12 @@ function parseLine(line: string): ChordSegment[] {
 function parseSectionHeader(trimmed: string): string | null {
   const hashMatch = trimmed.match(/^#\s*(.+)$/);
   if (hashMatch) return hashMatch[1].trim();
-  const plainMatch = trimmed.match(/^(intro|verse\s*\d*|chorus|outro|solo|bridge|interlude|pre.?chorus)\s*:?\s*$/i);
+  // "Verse 1:", "Chorus 2:", "Intro:", "Bridge:", etc.
+  const plainMatch = trimmed.match(/^(intro|verse\s*\d*|chorus\s*\d*|outro|solo|bridge|interlude|pre.?chorus|tag)\s*:?\s*$/i);
   if (plainMatch) {
     const s = plainMatch[1].trim();
-    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+    const normalized = s.replace(/\s+/g, ' ');
+    return normalized.charAt(0).toUpperCase() + normalized.slice(1).toLowerCase();
   }
   return null;
 }
@@ -73,8 +75,8 @@ export function parseChordPro(raw: string): ParsedSong {
       artist = artistLine[1].trim();
       continue;
     }
-    // Skip other OnSong metadata (Key, Notes, Tempo, etc.)
-    if (/^(Key|Original Key|Notes|Tempo|Scripture|Book|Capo)\s*:/i.test(trimmed)) continue;
+    // Skip other OnSong metadata (Key, Notes, Tempo, CCLI, Book, etc.)
+    if (/^(Key|Original Key|Notes|Tempo|Scripture|Book|Capo|CCLI)\s*:/i.test(trimmed)) continue;
     const section = parseSectionHeader(trimmed);
     if (section !== null) {
       result.push({ section });

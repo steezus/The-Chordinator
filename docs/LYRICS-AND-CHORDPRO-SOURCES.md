@@ -44,14 +44,14 @@ Most of these return **plain lyrics only**, not chord positions. You’d still n
 
 The fetch script builds `public/songs.json` from a GitHub repo. The app then loads and merges those songs at runtime.
 
-**Default (recommended): mattgraham/worship**
+**Default: mattgraham/worship**
 
-- **mattgraham/worship** – Hundreds of worship songs in **OnSong** format (ChordPro-style with Title/Artist headers and full lyrics). Branch: `master`. Extension: `.onsong`. These are full songs, not samples.
+- **mattgraham/worship** – Hundreds of worship songs in **OnSong** format (ChordPro-style with Title/Artist headers). Branch: `master`. Extension: `.onsong`. Some files are full songs; others may be abbreviated (first verses only). The app parses "Verse 1:", "Chorus 2:", etc. as section headers.
 
-**Other sources:**
+**Other sources (for more complete or different songs):**
 
-- **pcderic/chordpro** – Many `.cho` files (ChordPro). Branch: `main`. Some files may be excerpts.
-- **OpenSong XML** – The app also parses OpenSong XML (e.g. from OpenSong exports or repos like brry/chords). Use the same fetch script with a repo that has `.xml` OpenSong files if you add support for that extension.
+- **pcderic/chordpro** – Many `.cho` files (ChordPro). Branch: `main`. Can have fuller lyrics for some titles. Try: `node scripts/fetch-chordpro-from-github.mjs pcderic/chordpro 80 cho main` and replace or merge with `public/songs.json`.
+- If songs from one repo are incomplete (only first verses), try the other repo or add full ChordPro manually to `songContent.ts` / `public/songs.json`.
 
 **Fetch script (Node 18+):**
 

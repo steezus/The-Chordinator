@@ -2,11 +2,14 @@ import { useEffect, useRef } from 'react';
 import { Instrument } from 'piano-chart';
 import { chordParserFactory } from 'chord-symbol';
 import { chordToPianoChordOrgUrl } from '../utils/pianochordOrg';
+import { getPianoNotesForChord } from '../data/pianoChordNotes';
 
 const parseChord = chordParserFactory();
 
-/** Map chord-symbol note names (e.g. "Eb", "C#") to piano-chart format (e.g. "Eb4"). Uses normalized.notes from chord-symbol. */
+/** Piano notes for diagram: use PianoChord.org-style map first, then chord-symbol. */
 function chordNameToPianoNotes(chordName: string): string[] {
+  const fromMap = getPianoNotesForChord(chordName);
+  if (fromMap.length > 0) return fromMap;
   const trimmed = chordName.trim();
   if (!trimmed) return [];
   try {
@@ -15,8 +18,7 @@ function chordNameToPianoNotes(chordName: string): string[] {
     const normalized = (parsed as { normalized?: { notes?: string[] } }).normalized;
     const notes = normalized?.notes;
     if (!Array.isArray(notes) || notes.length === 0) return [];
-    const octave = 4;
-    return notes.map((noteName) => `${String(noteName).trim()}${octave}`);
+    return notes.map((noteName) => `${String(noteName).trim()}4`);
   } catch {
     return [];
   }
