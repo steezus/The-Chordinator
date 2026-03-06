@@ -63,17 +63,48 @@ export const PIANO_CHORD_NOTES: Record<string, string[]> = {
   Gm7: ['G', 'Bb', 'D', 'F'],
   Am7: ['A', 'C', 'E', 'G'],
   Bm7: ['B', 'D', 'F#', 'A'],
-  // Sus, dim, aug
+  // Sus, dim, aug (PianoChord.org "Notes:" style)
   Csus: ['C', 'F', 'G'],
   Csus4: ['C', 'F', 'G'],
+  Dsus4: ['D', 'G', 'A'],
+  Esus4: ['E', 'A', 'B'],
+  Fsus4: ['F', 'Bb', 'C'],
   Gsus4: ['G', 'C', 'D'],
+  Asus4: ['A', 'D', 'E'],
+  Bsus4: ['B', 'E', 'F#'],
   Cdim: ['C', 'Eb', 'Gb'],
   Cdim7: ['C', 'Eb', 'Gb', 'A'],
+  Ddim: ['D', 'F', 'Ab'],
+  Ddim7: ['D', 'F', 'Ab', 'B'],
   Caug: ['C', 'E', 'G#'],
-  // Common extended
+  Daug: ['D', 'F#', 'A#'],
+  Eaug: ['E', 'G#', 'C'],
+  Gaug: ['G', 'B', 'D#'],
+  Aaug: ['A', 'C#', 'F'],
+  Baug: ['B', 'D#', 'G'],
+  // 6 chords
   C6: ['C', 'E', 'G', 'A'],
+  D6: ['D', 'F#', 'A', 'B'],
+  E6: ['E', 'G#', 'B', 'C#'],
+  G6: ['G', 'B', 'D', 'E'],
+  A6: ['A', 'C#', 'E', 'F#'],
+  B6: ['B', 'D#', 'F#', 'G#'],
+  Cm6: ['C', 'Eb', 'G', 'A'],
+  Am6: ['A', 'C', 'E', 'F#'],
+  Bm6: ['B', 'D', 'F#', 'G#'],
+  // Half-diminished / m7b5
   Am7b5: ['A', 'C', 'Eb', 'G'],
+  Bbm7b5: ['Bb', 'Db', 'E', 'Ab'],
   Cm7b5: ['C', 'Eb', 'Gb', 'Bb'],
+  Dm7b5: ['D', 'F', 'Ab', 'C'],
+  Em7b5: ['E', 'G', 'Bb', 'D'],
+  Fm7b5: ['F', 'Ab', 'B', 'Eb'],
+  Gm7b5: ['G', 'Bb', 'Db', 'F'],
+  Bm7b5: ['B', 'D', 'F', 'A'],
+  // Add9 / common variants
+  Cadd9: ['C', 'E', 'G', 'D'],
+  Gadd9: ['G', 'B', 'D', 'A'],
+  Dadd9: ['D', 'F#', 'A', 'E'],
 };
 
 const OCTAVE = 4;

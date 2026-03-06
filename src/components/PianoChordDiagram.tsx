@@ -6,7 +6,10 @@ import { getPianoNotesForChord } from '../data/pianoChordNotes';
 
 const parseChord = chordParserFactory();
 
-/** Piano notes for diagram: use PianoChord.org-style map first, then chord-symbol. */
+/**
+ * Piano notes for the diagram: use PianoChord.org-style map first (same "Notes:" as their site),
+ * then fall back to chord-symbol so the in-app chart matches PianoChord.org where we have data.
+ */
 function chordNameToPianoNotes(chordName: string): string[] {
   const fromMap = getPianoNotesForChord(chordName);
   if (fromMap.length > 0) return fromMap;
@@ -58,16 +61,24 @@ export function PianoChordDiagram({ chordName }: PianoChordDiagramProps) {
   }, [chordName]);
 
   const notes = chordNameToPianoNotes(chordName);
+  const pianoChordUrl = chordToPianoChordOrgUrl(chordName) ?? 'https://www.pianochord.org/';
+
   if (notes.length === 0) {
     return (
       <div className="chord-diagram chord-diagram--unsupported">
         <span className="chord-diagram__label">{chordName}</span>
         <p>Could not parse chord for piano.</p>
+        <a
+          href={pianoChordUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="chord-diagram__pianochord-link"
+        >
+          View on PianoChord.org →
+        </a>
       </div>
     );
   }
-
-  const pianoChordUrl = chordToPianoChordOrgUrl(chordName) ?? 'https://www.pianochord.org/';
 
   return (
     <div className="chord-diagram chord-diagram--piano">
@@ -79,7 +90,7 @@ export function PianoChordDiagram({ chordName }: PianoChordDiagramProps) {
         rel="noopener noreferrer"
         className="chord-diagram__pianochord-link"
       >
-        View on PianoChord.org →
+        Same notes as PianoChord.org — open for fingerings →
       </a>
     </div>
   );
