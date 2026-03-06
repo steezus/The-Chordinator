@@ -6,7 +6,10 @@ export interface ChordSegment {
 }
 
 export interface LyricsLine {
-  segments: ChordSegment[];
+  /** Section header (e.g. "Verse 1", "Chorus"). When set, this line is a header only. */
+  section?: string;
+  /** Chord + lyric segments. Omitted when section is set. */
+  segments?: ChordSegment[];
 }
 
 export interface ParsedSong {

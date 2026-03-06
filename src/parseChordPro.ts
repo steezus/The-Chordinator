@@ -32,10 +32,22 @@ function parseLine(line: string): ChordSegment[] {
   return segments;
 }
 
+function parseSectionHeader(trimmed: string): string | null {
+  const hashMatch = trimmed.match(/^#\s*(.+)$/);
+  if (hashMatch) return hashMatch[1].trim();
+  const plainMatch = trimmed.match(/^(intro|verse\s*\d*|chorus|outro|solo|bridge|interlude|pre.?chorus)\s*:?\s*$/i);
+  if (plainMatch) {
+    const s = plainMatch[1].trim();
+    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  }
+  return null;
+}
+
 /**
  * Parse full ChordPro-style text. Supports:
  * - {title: Song Name}
- * - # comments (ignored)
+ * - # Verse 1 / #Chorus (section headers)
+ * - Plain "Verse 1:", "Chorus:" (section headers)
  * - Lines with [Chord] above syllables
  */
 export function parseChordPro(raw: string): ParsedSong {
@@ -49,7 +61,11 @@ export function parseChordPro(raw: string): ParsedSong {
       result.push({ segments: [] });
       continue;
     }
-    if (trimmed.startsWith('#')) continue;
+    const section = parseSectionHeader(trimmed);
+    if (section !== null) {
+      result.push({ section });
+      continue;
+    }
     const titleMatch = trimmed.match(/^\{\s*title\s*:\s*(.+)\s*\}$/i);
     if (titleMatch) {
       title = titleMatch[1].trim();

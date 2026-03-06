@@ -52,8 +52,9 @@ Then open **http://localhost:5173** in your browser. Try a song (e.g. “So Easy
 ChordPro format:
 
 - `{title: Your Song Title}`
-- Lines with chords: `[G]word [C]word`
-- Empty lines for verse/chorus breaks
+- Section headers: `# Verse 1`, `# Chorus`, `# Intro`, or plain `Verse 1:`, `Chorus:` (UkuTabs-style)
+- Lines with chords: `[G]word [C]word` (chord is shown above the text that follows it)
+- Empty lines for spacing
 
 ## Adding more chords
 

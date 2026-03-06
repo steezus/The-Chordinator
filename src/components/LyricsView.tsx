@@ -12,21 +12,27 @@ export function LyricsView({ song, selectedChord, onChordSelect }: LyricsViewPro
     <article className="lyrics">
       <h1 className="lyrics__title">{song.title}</h1>
       <div className="lyrics__content">
-        {song.lines.map((line, lineIdx) => (
-          <LyricsLine
-            key={lineIdx}
-            segments={line.segments}
-            selectedChord={selectedChord}
-            onChordSelect={onChordSelect}
-          />
-        ))}
+        {song.lines.map((line, lineIdx) =>
+          line.section ? (
+            <h2 key={lineIdx} className="lyrics__section">
+              {line.section}:
+            </h2>
+          ) : (
+            <LyricsLine
+              key={lineIdx}
+              segments={line.segments ?? []}
+              selectedChord={selectedChord}
+              onChordSelect={onChordSelect}
+            />
+          )
+        )}
       </div>
     </article>
   );
 }
 
 /**
- * Book-like layout: each segment is one unit (chord above, words below). Segments flow inline and wrap together so the chord stays directly above its phrase.
+ * UkuTabs-style: one row of chords, one row of lyrics. Each column = one segment so the chord sits directly above its phrase.
  */
 function LyricsLine({
   segments,
@@ -47,22 +53,35 @@ function LyricsLine({
   };
 
   return (
-    <div className="lyrics__line">
+    <div
+      className="lyrics__line lyrics__line--grid"
+      style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${segments.length}, auto)`,
+        gridTemplateRows: 'auto auto',
+        gap: '0 0.5em',
+        alignItems: 'end',
+      }}
+    >
       {segments.map((seg, i) => (
-        <span key={i} className="lyrics__segment">
+        <div key={`chord-${i}`} className="lyrics__cell lyrics__cell--chord">
           {seg.chord !== null ? (
-            <span className="lyrics__chord-line">
-              <button
-                type="button"
-                className={`lyrics__chord ${selectedChord === seg.chord ? 'lyrics__chord--selected' : ''}`}
-                onClick={(e) => handleChordClick(seg.chord!, e)}
-              >
-                {seg.chord}
-              </button>
-            </span>
-          ) : null}
-          <span className="lyrics__words">{seg.text}</span>
-        </span>
+            <button
+              type="button"
+              className={`lyrics__chord ${selectedChord === seg.chord ? 'lyrics__chord--selected' : ''}`}
+              onClick={(e) => handleChordClick(seg.chord!, e)}
+            >
+              {seg.chord}
+            </button>
+          ) : (
+            <span className="lyrics__chord-spacer">&#xA0;</span>
+          )}
+        </div>
+      ))}
+      {segments.map((seg, i) => (
+        <div key={`text-${i}`} className="lyrics__cell lyrics__cell--text">
+          {seg.text}
+        </div>
       ))}
     </div>
   );
