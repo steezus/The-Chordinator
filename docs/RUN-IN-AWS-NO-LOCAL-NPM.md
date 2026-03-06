@@ -2,6 +2,8 @@
 
 You don’t need Node or npm on your Windows PC. The app is **built inside Docker on an EC2 instance** in AWS. Follow these steps.
 
+**Using SSM to deploy?** The **Chordinator-DeployApp** SSM document clones your repo, **fetches ChordPro songs** from a GitHub repo (e.g. pcderic/chordpro), then builds and runs the app—all in AWS, nothing to run locally. See **[docs/ssm/README-SSM.md](ssm/README-SSM.md)**.
+
 ---
 
 ## 1. Get your code into AWS

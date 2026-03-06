@@ -18,9 +18,23 @@
 }
 
 .home__tagline {
-  margin: 0 0 1.5rem;
+  margin: 0 0 0.5rem;
   font-size: 1rem;
   color: var(--text-muted);
+}
+
+.home__import-link {
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+}
+
+.home__import-link a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.home__import-link a:hover {
+  text-decoration: underline;
 }
 
 .home__search {

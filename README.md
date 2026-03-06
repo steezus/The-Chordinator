@@ -31,6 +31,7 @@ Then open **http://localhost:5173** in your browser. Try a song (e.g. “So Easy
 ## Adding more songs
 
 - **In code**: Add ChordPro to `src/data/songContent.ts` and the song to `src/data/songRepository.ts`.
+- **Lyrics / ChordPro sources**: See **[docs/LYRICS-AND-CHORDPRO-SOURCES.md](docs/LYRICS-AND-CHORDPRO-SOURCES.md)** for open-source lyrics APIs and where to find ChordPro charts.
 - **Large repository**: Put a **`public/songs.json`** file in the project. The app loads it on startup and **merges** those songs into the built-in catalog (no duplicate ids). Format:
 
   ```json
@@ -48,6 +49,16 @@ Then open **http://localhost:5173** in your browser. Try a song (e.g. “So Easy
   ```
 
   Each entry can omit `content`; then the app uses built-in content for that id if available, or a placeholder. You can host a large JSON elsewhere and copy it into `public/songs.json`, or generate it from your own ChordPro files.
+
+  **Populate from a ChordPro GitHub repo:** Run the fetch script (Node 18+, no npm required) to download `.cho` files and build `public/songs.json`:
+
+  ```bash
+  node scripts/fetch-chordpro-from-github.mjs [owner/repo] [maxSongs]
+  # Example (default: pcderic/chordpro, up to 80 songs):
+  node scripts/fetch-chordpro-from-github.mjs
+  ```
+
+  See **[docs/LYRICS-AND-CHORDPRO-SOURCES.md](docs/LYRICS-AND-CHORDPRO-SOURCES.md)** for details.
 
 ChordPro format:
 

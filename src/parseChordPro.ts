@@ -71,6 +71,25 @@ export function parseChordPro(raw: string): ParsedSong {
       title = titleMatch[1].trim();
       continue;
     }
+    // ChordPro directives: treat as section headers or skip so lyrics/chords stay correct
+    const startChorus = trimmed.match(/^\{\s*start_of_chorus\s*\}/i);
+    const startVerse = trimmed.match(/^\{\s*start_of_verse\s*\}/i);
+    if (startChorus) {
+      result.push({ section: 'Chorus' });
+      continue;
+    }
+    if (startVerse) {
+      result.push({ section: 'Verse' });
+      continue;
+    }
+    if (/^\{\s*end_of_(chorus|verse|bridge|tab)\s*\}/i.test(trimmed)) continue;
+    const commentSection = trimmed.match(/^\{\s*c\s*:\s*(.+)\s*\}$/i); // {c: Verse 1} = section
+    if (commentSection) {
+      result.push({ section: commentSection[1].trim() });
+      continue;
+    }
+    if (/^\{\s*(comment|text|highlight|font|size|subtitle|artist)\s*[:=]/i.test(trimmed)) continue;
+    if (/^\{\s*[a-z_]+\s*\}$/i.test(trimmed)) continue;
     result.push({ segments: parseLine(line) });
   }
 

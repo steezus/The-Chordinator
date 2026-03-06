@@ -1,0 +1,91 @@
+.piano-ref {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.piano-ref__header {
+  margin-bottom: 2rem;
+}
+
+.piano-ref__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.piano-ref__intro {
+  color: var(--text-muted, #555);
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.piano-ref__intro a {
+  color: var(--link-color, #0a6ed1);
+}
+
+.piano-ref__back {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: var(--link-color, #0a6ed1);
+  text-decoration: none;
+}
+
+.piano-ref__back:hover {
+  text-decoration: underline;
+}
+
+.piano-ref__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.piano-ref__group {
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  background: var(--card-bg, #fafafa);
+}
+
+.piano-ref__group-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  color: var(--text, #1a1a1a);
+}
+
+.piano-ref__chords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.piano-ref__chord {
+  display: inline-block;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  background: var(--chord-pill-bg, #e8e8e8);
+  color: var(--chord-pill-text, #1a1a1a);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: background 0.15s ease;
+}
+
+.piano-ref__chord:hover {
+  background: var(--chord-pill-hover, #d0d0d0);
+}
+
+.piano-ref__chord--na {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.piano-ref__footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color, #eee);
+  font-size: 0.9rem;
+  color: var(--text-muted, #555);
+}

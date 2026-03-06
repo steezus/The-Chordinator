@@ -1,0 +1,169 @@
+.import-page {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.import-page__header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.import-page__back {
+  display: inline-block;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+}
+
+.import-page__back:hover {
+  color: var(--accent);
+}
+
+.import-page__title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.import-page__main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.import-page__instructions {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.import-page__instructions p {
+  margin: 0 0 0.75rem;
+}
+
+.import-page__instructions ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.import-page__instructions li {
+  margin-bottom: 0.5rem;
+}
+
+.import-page__instructions a {
+  color: var(--accent);
+}
+
+.import-page__instructions code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--surface2);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+.import-page__form {
+  margin-bottom: 1.5rem;
+}
+
+.import-page__label {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.import-page__input {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  font-family: inherit;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+}
+
+.import-page__textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  font-family: var(--font-mono);
+  line-height: 1.5;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  resize: vertical;
+  min-height: 200px;
+}
+
+.import-page__hint {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.import-page__preview {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.import-page__preview-title {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.import-page__preview-content {
+  font-size: 1rem;
+}
+
+.import-page__actions {
+  margin-top: 1.5rem;
+}
+
+.import-page__copy-btn {
+  padding: 0.6rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.import-page__copy-btn:hover {
+  filter: brightness(1.1);
+}
+
+.import-page__copy-hint {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.import-page__copy-hint code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--surface2);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+}

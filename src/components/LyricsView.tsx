@@ -9,17 +9,18 @@ interface LyricsViewProps {
 
 export function LyricsView({ song, selectedChord, onChordSelect }: LyricsViewProps) {
   return (
-    <article className="lyrics">
+    <article className="lyrics" dir="ltr">
       <h1 className="lyrics__title">{song.title}</h1>
       <div className="lyrics__content">
         {song.lines.map((line, lineIdx) =>
           line.section ? (
-            <h2 key={lineIdx} className="lyrics__section">
+            <h2 key={`section-${lineIdx}`} className="lyrics__section">
               {line.section}:
             </h2>
           ) : (
             <LyricsLine
-              key={lineIdx}
+              key={`line-${lineIdx}`}
+              lineIndex={lineIdx}
               segments={line.segments ?? []}
               selectedChord={selectedChord}
               onChordSelect={onChordSelect}
@@ -36,16 +37,18 @@ export function LyricsView({ song, selectedChord, onChordSelect }: LyricsViewPro
  * Segments flow inline and wrap together so the chord stays above the word it's played on.
  */
 function LyricsLine({
+  lineIndex,
   segments,
   selectedChord,
   onChordSelect,
 }: {
+  lineIndex: number;
   segments: ChordSegment[];
   selectedChord: string | null;
   onChordSelect: (chord: string | null, anchorRect?: DOMRect) => void;
 }) {
   if (segments.length === 0) {
-    return <div className="lyrics__line lyrics__line--empty" />;
+    return <div className="lyrics__line lyrics__line--empty" aria-hidden />;
   }
 
   const handleChordClick = (chord: string, e: React.MouseEvent<HTMLButtonElement>) => {
@@ -54,9 +57,14 @@ function LyricsLine({
   };
 
   return (
-    <p className="lyrics__line lyrics__line--paragraph">
+    <div
+      className="lyrics__line lyrics__line--paragraph"
+      dir="ltr"
+      style={{ display: 'block' }}
+      data-line-index={lineIndex}
+    >
       {segments.map((seg, i) => (
-        <span key={i} className="lyrics__segment">
+        <span key={`${lineIndex}-${i}`} className="lyrics__segment">
           {seg.chord !== null ? (
             <span className="lyrics__chord-wrap">
               <button
@@ -71,6 +79,6 @@ function LyricsLine({
           <span className="lyrics__words">{seg.text}</span>
         </span>
       ))}
-    </p>
+    </div>
   );
 }

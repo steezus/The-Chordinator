@@ -57,6 +57,8 @@
   font-size: 1.1rem;
   line-height: 1.85;
   color: var(--text);
+  direction: ltr;
+  text-align: left;
 }
 
 /* Each segment = chord above (absolute) + text; UkuTabs-style: consistent block width with when it’s played */
@@ -88,6 +90,8 @@
 .lyrics__line--paragraph {
   white-space: pre-wrap;
   word-break: break-word;
+  direction: ltr;
+  unicode-bidi: plaintext;
 }
 
 /* One segment = chord above + words; segments inline so chord stays above its phrase */
@@ -219,6 +223,18 @@
 .chord-diagram--fretted svg {
   max-width: 100%;
   height: auto;
+}
+
+.chord-diagram__pianochord-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.chord-diagram__pianochord-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
 }
 
 .piano-chart-container {

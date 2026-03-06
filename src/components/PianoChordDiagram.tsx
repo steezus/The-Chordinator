@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Instrument } from 'piano-chart';
 import { chordParserFactory } from 'chord-symbol';
+import { chordToPianoChordOrgUrl } from '../utils/pianochordOrg';
 
 const parseChord = chordParserFactory();
 
@@ -64,10 +65,20 @@ export function PianoChordDiagram({ chordName }: PianoChordDiagramProps) {
     );
   }
 
+  const pianoChordUrl = chordToPianoChordOrgUrl(chordName) ?? 'https://www.pianochord.org/';
+
   return (
     <div className="chord-diagram chord-diagram--piano">
       <span className="chord-diagram__label chord-diagram__label--piano">{chordName}</span>
       <div ref={containerRef} className="piano-chart-container" />
+      <a
+        href={pianoChordUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="chord-diagram__pianochord-link"
+      >
+        View on PianoChord.org →
+      </a>
     </div>
   );
 }

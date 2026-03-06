@@ -38,6 +38,75 @@ I've been on my [Bb]own for long e[C]nough
 [F]Maybe you can [Dm]show me how to [Bb]love, maybe [C]
 [F]I'm going through a [Dm]down phase
 `.trim(),
+  'we-belong-together': `
+{title: We Belong Together — Mariah Carey}
+
+# Verse 1
+[Gm]I didn't mean it when I [Eb]said I didn't [Cm]love you so
+[F]I should have held on [Bb]tight, I never [Eb]let you go
+
+# Chorus
+[Gm]We belong to[Eb]gether
+[Cm]I can't [F]sleep at [Bb]night when you're on my [Eb]mind
+[Gm]We belong to[Eb]gether
+[Cm]And it's [F]just a [Bb]matter of [Eb]time
+`.trim(),
+  'hollaback-girl': `
+{title: Hollaback Girl — Gwen Stefani}
+
+# Verse 1
+[C]I ain't no [G]hollaback [Am]girl
+[C]I ain't no [G]hollaback [Am]girl
+
+# Chorus
+[C]This my [G]shit, this my [Am]shit
+[F]So many [G]times I've been [C]here
+[C]This my [G]shit, this my [Am]shit
+[F]So many [G]times I've been [C]here
+`.trim(),
+  'since-u-been-gone': `
+{title: Since U Been Gone — Kelly Clarkson}
+
+# Verse 1
+[Em]Here's the [C]thing, we started [G]out as friends
+[Em]It was cool, but it was [C]all pretend
+[G]Yeah, yeah
+
+# Chorus
+[G]Since you been [Em]gone
+[C]I can breathe for the [G]first time
+[G]Since you been [Em]gone
+[C]I'm so moving [G]on
+`.trim(),
+  'gold-digger': `
+{title: Gold Digger — Kanye West}
+
+# Verse 1
+[F]She take my [C]money when I'm in [Am]need
+[F]Yeah she's a [C]trifling friend in[Am]deed
+[G]Oh she's a [C]gold digger
+
+# Chorus
+[F]Now I ain't sayin' she's a [C]gold digger
+[Am]But she ain't messin' with no [G]broke niggas
+[F]Now I ain't sayin' she's a [C]gold digger
+[Am]But she ain't messin' with no [G]broke niggas
+`.trim(),
+  'boulevard-of-broken-dreams': `
+{title: Boulevard of Broken Dreams — Green Day}
+
+# Verse 1
+[Em]I walk a [G]lonely road
+[C]The only one that I have [D]ever known
+[Em]Don't know where it [G]goes
+[C]But it's home to me and I [D]walk alone
+
+# Chorus
+[Em]I walk a [G]lonely road
+[C]Boulevard of broken [D]dreams
+[Em]Where the city [G]sleeps
+[C]And I'm the only one and I [D]walk alone
+`.trim(),
   default: `
 {title: Song}
 

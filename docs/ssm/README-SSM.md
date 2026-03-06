@@ -12,7 +12,7 @@ Two SSM Command documents let you install Docker and deploy the app on the Chord
 | Document | Purpose |
 |----------|--------|
 | **Chordinator-InstallDocker** | Install Docker and Docker Compose on Amazon Linux. Run **once** per instance. |
-| **Chordinator-DeployApp** | Clone the GitHub repo and run `docker compose up -d --build`. Run after InstallDocker. Pass the repo URL as a parameter. |
+| **Chordinator-DeployApp** | Clone the GitHub repo, fetch ChordPro songs (optional), then run `docker compose up -d --build`. Run after InstallDocker. Parameters: **GitHubRepoUrl** (required), **ChordProRepo** (default `pcderic/chordpro`), **ChordProMaxSongs** (default `80`). |
 
 ---
 
@@ -21,7 +21,10 @@ Two SSM Command documents let you install Docker and deploy the app on the Chord
 1. **Systems Manager** → **Run Command**.
 2. **Command document**: choose **Chordinator-InstallDocker** (or **Chordinator-DeployApp**).
 3. **Targets**: choose **Specify instance tags** or **Specify instance IDs**, then select the Chordinator instance (e.g. `i-0344dc76adda57b9d`).
-4. For **Chordinator-DeployApp**, under **Parameters** set **GitHubRepoUrl** to your repo URL (e.g. `https://github.com/yourusername/The-Chordinator.git`).
+4. For **Chordinator-DeployApp**, under **Parameters** set:
+   - **GitHubRepoUrl** — your Chordinator repo (e.g. `https://github.com/yourusername/The-Chordinator.git`).
+   - **ChordProRepo** (optional) — ChordPro source, e.g. `pcderic/chordpro` (default).
+   - **ChordProMaxSongs** (optional) — max songs to fetch, e.g. `80` (default).
 5. **Run**.
 
 ---
@@ -39,7 +42,7 @@ aws ssm send-command \
 
 **2. Deploy app (after Docker is installed)**
 
-Replace `YOUR_GITHUB_REPO_URL` with your repo (e.g. `https://github.com/yourusername/The-Chordinator.git`):
+Replace `YOUR_GITHUB_REPO_URL` with your repo (e.g. `https://github.com/yourusername/The-Chordinator.git`). The deploy will clone the repo, fetch ChordPro songs from **pcderic/chordpro** (up to 80), then build and run the app:
 
 ```bash
 aws ssm send-command \
@@ -47,6 +50,16 @@ aws ssm send-command \
   --document-name "Chordinator-DeployApp" \
   --parameters "GitHubRepoUrl=https://github.com/YOUR_USERNAME/The-Chordinator.git" \
   --comment "Deploy Chordinator from GitHub"
+```
+
+Optional: override ChordPro source and limit:
+
+```bash
+aws ssm send-command \
+  --instance-ids "i-0344dc76adda57b9d" \
+  --document-name "Chordinator-DeployApp" \
+  --parameters "GitHubRepoUrl=https://github.com/YOUR_USERNAME/The-Chordinator.git,ChordProRepo=pcderic/chordpro,ChordProMaxSongs=50" \
+  --comment "Deploy Chordinator (50 ChordPro songs)"
 ```
 
 **3. Check command status and output**

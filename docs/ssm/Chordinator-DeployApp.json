@@ -1,10 +1,20 @@
 {
   "schemaVersion": "2.2",
-  "description": "Clone Chordinator repo and run docker compose. Requires Docker already installed (run Chordinator-InstallDocker first).",
+  "description": "Clone Chordinator repo, fetch ChordPro songs from GitHub, then run docker compose. Requires Docker already installed (run Chordinator-InstallDocker first).",
   "parameters": {
     "GitHubRepoUrl": {
       "type": "String",
       "description": "GitHub repo URL to clone (e.g. https://github.com/username/The-Chordinator.git)"
+    },
+    "ChordProRepo": {
+      "type": "String",
+      "default": "pcderic/chordpro",
+      "description": "ChordPro source repo owner/name (e.g. pcderic/chordpro)"
+    },
+    "ChordProMaxSongs": {
+      "type": "String",
+      "default": "80",
+      "description": "Max number of ChordPro songs to fetch (e.g. 80)"
     }
   },
   "mainSteps": [
@@ -20,6 +30,34 @@
           "rm -rf the-chordinator",
           "git clone \"{{ GitHubRepoUrl }}\" the-chordinator",
           "cd the-chordinator",
+          "echo Clone complete."
+        ]
+      }
+    },
+    {
+      "action": "aws:runShellScript",
+      "name": "fetchChordProSongs",
+      "inputs": {
+        "runCommand": [
+          "#!/bin/bash",
+          "cd /home/ec2-user/the-chordinator",
+          "if [ -f scripts/fetch-chordpro-from-github.mjs ]; then",
+          "  echo Fetching ChordPro songs from {{ ChordProRepo }} (max {{ ChordProMaxSongs }})...",
+          "  docker run --rm -v /home/ec2-user/the-chordinator:/app -w /app node:20-alpine node scripts/fetch-chordpro-from-github.mjs '{{ ChordProRepo }}' '{{ ChordProMaxSongs }}' || echo 'ChordPro fetch failed or skipped; continuing with build.'",
+          "else",
+          "  echo No fetch script found; skipping ChordPro fetch.",
+          "fi"
+        ]
+      }
+    },
+    {
+      "action": "aws:runShellScript",
+      "name": "buildAndRun",
+      "inputs": {
+        "runCommand": [
+          "#!/bin/bash",
+          "set -e",
+          "cd /home/ec2-user/the-chordinator",
           "export DOCKER_BUILDKIT=0",
           "/usr/local/bin/docker-compose up -d --build",
           "echo Deploy complete. App should be on port 8080."
