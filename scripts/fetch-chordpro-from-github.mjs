@@ -21,27 +21,37 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const OUT_PATH = path.join(ROOT, 'public', 'songs.json');
 
-const DEFAULT_REPO = 'pcderic/chordpro';
+const DEFAULT_REPO = 'mattgraham/worship';
 const DEFAULT_MAX = 80;
+const DEFAULT_EXT = 'onsong';
+const DEFAULT_BRANCH = 'master';
 const DELAY_MS = 250;
 
-function slugFromPath(filePath) {
-  const base = path.basename(filePath, '.cho');
+function slugFromPath(filePath, ext) {
+  const base = path.basename(filePath, path.extname(filePath));
   return base
     .replace(/\s+/g, '-')
     .replace(/[^a-zA-Z0-9-]/g, '')
     .toLowerCase() || 'untitled';
 }
 
-function parseTitleAndArtist(content) {
+function parseTitleAndArtist(content, isOnsong = false) {
   let title = '';
   let artist = '';
   for (const line of content.split(/\r?\n/)) {
-    const t = line.match(/^\{\s*title\s*:\s*(.+)\s*\}$/i);
-    if (t) title = t[1].trim();
-    const st = line.match(/^\{\s*st\s*:\s*(.+)\s*\}$/i);
-    if (st) artist = st[1].trim();
-    if (title && artist) break;
+    if (isOnsong) {
+      const t = line.match(/^Title\s*:\s*(.+)$/i);
+      if (t) title = t[1].trim();
+      const a = line.match(/^Artist\s*:\s*(.+)$/i);
+      if (a) artist = a[1].trim();
+      if (title) break;
+    } else {
+      const t = line.match(/^\{\s*title\s*:\s*(.+)\s*\}$/i);
+      if (t) title = t[1].trim();
+      const st = line.match(/^\{\s*st\s*:\s*(.+)\s*\}$/i);
+      if (st) artist = st[1].trim();
+      if (title && artist) break;
+    }
   }
   if (!title) title = 'Untitled';
   if (!artist && title.includes(' — ')) {
@@ -69,13 +79,14 @@ async function getTreeSha(owner, repo, branch = 'main') {
   return commit.tree.sha;
 }
 
-async function listChoFiles(owner, repo, branch = 'main') {
+async function listSongFiles(owner, repo, branch, ext) {
   const treeSha = await getTreeSha(owner, repo, branch);
   const tree = await fetchJson(
     `https://api.github.com/repos/${owner}/${repo}/git/trees/${treeSha}?recursive=1`
   );
+  const suffix = ext.startsWith('.') ? ext : '.' + ext;
   return (tree.tree || [])
-    .filter((e) => e.type === 'blob' && e.path && e.path.toLowerCase().endsWith('.cho'))
+    .filter((e) => e.type === 'blob' && e.path && e.path.toLowerCase().endsWith(suffix.toLowerCase()))
     .map((e) => e.path);
 }
 
@@ -84,22 +95,27 @@ function sleep(ms) {
 }
 
 async function main() {
-  const [repoArg = DEFAULT_REPO, maxArg = DEFAULT_MAX] = process.argv.slice(2);
+  const [repoArg = DEFAULT_REPO, maxArg = DEFAULT_MAX, extArg = DEFAULT_EXT, branchArg = DEFAULT_BRANCH] = process.argv.slice(2);
   const [owner, repo] = repoArg.split('/');
-  const maxSongs = Math.min(parseInt(maxArg, 10) || DEFAULT_MAX, 200);
+  const maxSongs = Math.min(parseInt(maxArg, 10) || DEFAULT_MAX, 300);
+  const ext = (extArg || DEFAULT_EXT).toLowerCase().replace(/^\./, '') || 'onsong';
+  const branch = branchArg || (repo === 'worship' ? 'master' : 'main');
   if (!owner || !repo) {
-    console.error('Usage: node scripts/fetch-chordpro-from-github.mjs [owner/repo] [maxSongs]');
+    console.error('Usage: node scripts/fetch-chordpro-from-github.mjs [owner/repo] [maxSongs] [ext] [branch]');
+    console.error('Example: node scripts/fetch-chordpro-from-github.mjs mattgraham/worship 80 onsong master');
+    console.error('Example: node scripts/fetch-chordpro-from-github.mjs pcderic/chordpro 80 cho main');
     process.exit(1);
   }
 
-  console.log(`Listing .cho files in ${owner}/${repo}...`);
-  const paths = await listChoFiles(owner, repo);
+  console.log(`Listing .${ext} files in ${owner}/${repo} (${branch})...`);
+  const paths = await listSongFiles(owner, repo, branch, ext);
   const toFetch = paths.slice(0, maxSongs);
-  console.log(`Found ${paths.length} .cho files; fetching up to ${toFetch.length}.`);
+  console.log(`Found ${paths.length} .${ext} files; fetching up to ${toFetch.length}.`);
 
-  const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/`;
+  const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
   const songs = [];
   const seenSlugs = new Set();
+  const isOnsong = ext === 'onsong';
 
   for (let i = 0; i < toFetch.length; i++) {
     const filePath = toFetch[i];
@@ -111,8 +127,8 @@ async function main() {
         continue;
       }
       const content = await res.text();
-      const { title, artist } = parseTitleAndArtist(content);
-      let slug = slugFromPath(filePath);
+      const { title, artist } = parseTitleAndArtist(content, isOnsong);
+      let slug = slugFromPath(filePath, ext);
       while (seenSlugs.has(slug)) slug += '-' + (i + 1);
       seenSlugs.add(slug);
       songs.push({

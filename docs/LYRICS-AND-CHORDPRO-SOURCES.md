@@ -6,13 +6,18 @@ A short overview of options for getting lyrics and chord charts. **Lyrics are us
 
 ## Where songs come from
 
-The Chordinator shows **full lyrics with chords mapped above** when ChordPro content is available. Songs get that content from:
+The Chordinator shows **full lyrics with chords mapped above** when content is available. The app supports:
 
-- **Built-in** – A small set of songs in `src/data/songContent.ts`.
-- **ChordPro repos** – The deploy script can fetch `.cho` files from a GitHub repo (e.g. pcderic/chordpro) into `public/songs.json`. See **ChordPro repos** below.
-- **Manual** – Add or edit ChordPro in `songContent.ts` or `public/songs.json`.
+- **ChordPro / OnSong** – Inline chords like `[C]word [G]word` (ChordPro) or Title/Artist + section labels (OnSong).
+- **OpenSong XML** – Full song XML with `<title>`, `<author>`, `<lyrics>`; chord lines (.) and lyric lines are paired automatically.
 
-Songs that don’t have ChordPro content yet show a short placeholder (“Lyrics and chords for this song aren’t available yet”) until content is added.
+Songs get content from:
+
+- **Built-in** – A small set in `src/data/songContent.ts`.
+- **Fetch script** – Deploy or run the script to pull songs from a GitHub repo into `public/songs.json`. **Default source:** **mattgraham/worship** (OnSong format, full worship songs). See **Song sources** below.
+- **Manual** – Add ChordPro, OnSong, or OpenSong XML to `songContent.ts` or `public/songs.json`.
+
+Songs without content show a short placeholder until content is added.
 
 ---
 
@@ -35,35 +40,38 @@ Most of these return **plain lyrics only**, not chord positions. You’d still n
 
 ---
 
-## ChordPro repos (songs with chords)
+## Song sources (chords + lyrics)
 
-Public GitHub repos often host ChordPro `.cho` files (chords + lyrics). The Chordinator can **build** `public/songs.json` from one of these repos so the app loads those songs at runtime.
+The fetch script builds `public/songs.json` from a GitHub repo. The app then loads and merges those songs at runtime.
 
-- **pcderic/chordpro** – Many `.cho` files at repo root (e.g. “A Night To Remember”, “A Whiter Shade of Pale”). Raw URL pattern: `https://raw.githubusercontent.com/pcderic/chordpro/main/<filename>.cho`.
-- **chordpro-setlists/setlists** – Contains a `songs` folder with ChordPro content; structure differs from pcderic/chordpro.
+**Default (recommended): mattgraham/worship**
 
-**Fetch script (Node 18+, no npm required):**
+- **mattgraham/worship** – Hundreds of worship songs in **OnSong** format (ChordPro-style with Title/Artist headers and full lyrics). Branch: `master`. Extension: `.onsong`. These are full songs, not samples.
 
-From the project root (e.g. on your machine or on EC2 after clone):
+**Other sources:**
+
+- **pcderic/chordpro** – Many `.cho` files (ChordPro). Branch: `main`. Some files may be excerpts.
+- **OpenSong XML** – The app also parses OpenSong XML (e.g. from OpenSong exports or repos like brry/chords). Use the same fetch script with a repo that has `.xml` OpenSong files if you add support for that extension.
+
+**Fetch script (Node 18+):**
 
 ```bash
-node scripts/fetch-chordpro-from-github.mjs [owner/repo] [maxSongs]
+node scripts/fetch-chordpro-from-github.mjs [owner/repo] [maxSongs] [ext] [branch]
 ```
 
 Examples:
 
-- `node scripts/fetch-chordpro-from-github.mjs` — uses **pcderic/chordpro**, up to 80 songs.
-- `node scripts/fetch-chordpro-from-github.mjs pcderic/chordpro 50` — same repo, limit 50.
+- `node scripts/fetch-chordpro-from-github.mjs` — **mattgraham/worship**, 80 songs, `.onsong`, branch `master`.
+- `node scripts/fetch-chordpro-from-github.mjs mattgraham/worship 120 onsong master`
+- `node scripts/fetch-chordpro-from-github.mjs pcderic/chordpro 50 cho main` — ChordPro repo.
 
-The script uses the GitHub API to list `.cho` files, fetches each file’s raw content, parses `{title: ...}` and `{st: ...}` (artist), and writes `public/songs.json`. Existing `public/songs.json` is backed up to `public/songs.json.bak`. Optional: set `GITHUB_TOKEN` for higher API rate limits.
-
-After running the script, rebuild and redeploy the app so it serves the new `public/songs.json`; the app merges these songs into the built-in catalog.
+The script backs up existing `public/songs.json` to `public/songs.json.bak`. Set `GITHUB_TOKEN` for higher API rate limits. After running, rebuild and redeploy so the app serves the new songs.
 
 ---
 
 ## This app
 
-- **Built-in songs** – ChordPro is in `src/data/songContent.ts`; add or edit entries there.
-- **Large catalog** – Put ChordPro in `public/songs.json` (see README) so the app loads it at runtime. You can generate that file from your own ChordPro files, or use the **fetch script** above to pull from a ChordPro GitHub repo.
+- **Built-in songs** – Content in `src/data/songContent.ts` (ChordPro, OnSong, or OpenSong XML).
+- **Large catalog** – Put content in `public/songs.json` or generate it with the fetch script from **mattgraham/worship** (OnSong) or another repo.
 
 For **legal use**, prefer: your own transcriptions, public-domain material, or sources that explicitly allow your use case (e.g. non-commercial, educational, or with a clear license).

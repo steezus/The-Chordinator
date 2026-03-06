@@ -53,6 +53,7 @@ function parseSectionHeader(trimmed: string): string | null {
 export function parseChordPro(raw: string): ParsedSong {
   const inputLines = raw.split(/\r?\n/);
   let title = 'Untitled';
+  let artist = '';
   const result: LyricsLine[] = [];
 
   for (const line of inputLines) {
@@ -61,6 +62,19 @@ export function parseChordPro(raw: string): ParsedSong {
       result.push({ segments: [] });
       continue;
     }
+    // OnSong-style: Title: ... / Artist: ... (skip, don't add to lyrics)
+    const titleLine = trimmed.match(/^Title\s*:\s*(.+)$/i);
+    if (titleLine) {
+      title = titleLine[1].trim();
+      continue;
+    }
+    const artistLine = trimmed.match(/^Artist\s*:\s*(.+)$/i);
+    if (artistLine) {
+      artist = artistLine[1].trim();
+      continue;
+    }
+    // Skip other OnSong metadata (Key, Notes, Tempo, etc.)
+    if (/^(Key|Original Key|Notes|Tempo|Scripture|Book|Capo)\s*:/i.test(trimmed)) continue;
     const section = parseSectionHeader(trimmed);
     if (section !== null) {
       result.push({ section });
@@ -93,5 +107,6 @@ export function parseChordPro(raw: string): ParsedSong {
     result.push({ segments: parseLine(line) });
   }
 
+  if (artist && title !== 'Untitled') title = `${title} — ${artist}`;
   return { title, lines: result };
 }

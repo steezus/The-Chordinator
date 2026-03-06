@@ -53,8 +53,8 @@ Then open **http://localhost:5173** in your browser. Try a song (e.g. “So Easy
   **Populate from a ChordPro GitHub repo:** Run the fetch script (Node 18+, no npm required) to download `.cho` files and build `public/songs.json`:
 
   ```bash
-  node scripts/fetch-chordpro-from-github.mjs [owner/repo] [maxSongs]
-  # Example (default: pcderic/chordpro, up to 80 songs):
+  node scripts/fetch-chordpro-from-github.mjs [owner/repo] [maxSongs] [ext] [branch]
+  # Example (default: mattgraham/worship, 80 OnSong songs, full lyrics+chords):
   node scripts/fetch-chordpro-from-github.mjs
   ```
 

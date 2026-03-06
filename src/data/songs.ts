@@ -1,5 +1,5 @@
-import { parseChordPro } from '../parseChordPro';
 import type { ParsedSong } from '../types';
+import { parseSongContent } from '../parseSongContent';
 import type { SongMeta } from './songs.types';
 import { SONG_REPOSITORY } from './songRepository';
 import { SONG_CONTENT } from './songContent';
@@ -57,7 +57,7 @@ export function getParsedSong(
   opts?: { catalog?: SongMeta[] | null; contentMap?: Map<string, string> | null }
 ): ParsedSong {
   const raw = getSongContent(id, opts?.contentMap);
-  const parsed = parseChordPro(raw);
+  const parsed = parseSongContent(raw);
   const meta = getSongById(id, opts?.catalog);
   if (meta && parsed.title === 'Song') parsed.title = `${meta.title} — ${meta.artist}`;
   return parsed;
