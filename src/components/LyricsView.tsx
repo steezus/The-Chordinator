@@ -26,7 +26,7 @@ export function LyricsView({ song, selectedChord, onChordSelect }: LyricsViewPro
 }
 
 /**
- * UkuTabs-style: one row of chords, one row of lyrics. One column per segment so each chord sits directly above its phrase.
+ * Book-like layout: each segment is one unit (chord above, words below). Segments flow inline and wrap together so the chord stays directly above its phrase.
  */
 function LyricsLine({
   segments,
@@ -47,34 +47,22 @@ function LyricsLine({
   };
 
   return (
-    <div
-      className="lyrics__line lyrics__line--grid"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${segments.length}, auto)`,
-        gridTemplateRows: 'auto auto',
-        gap: '0 1em',
-      }}
-    >
+    <div className="lyrics__line">
       {segments.map((seg, i) => (
-        <div key={`chord-${i}`} className="lyrics__cell lyrics__cell--chord">
+        <span key={i} className="lyrics__segment">
           {seg.chord !== null ? (
-            <button
-              type="button"
-              className={`lyrics__chord ${selectedChord === seg.chord ? 'lyrics__chord--selected' : ''}`}
-              onClick={(e) => handleChordClick(seg.chord!, e)}
-            >
-              {seg.chord}
-            </button>
-          ) : (
-            '\u00A0'
-          )}
-        </div>
-      ))}
-      {segments.map((seg, i) => (
-        <div key={`text-${i}`} className="lyrics__cell lyrics__cell--text">
-          {seg.text}
-        </div>
+            <span className="lyrics__chord-line">
+              <button
+                type="button"
+                className={`lyrics__chord ${selectedChord === seg.chord ? 'lyrics__chord--selected' : ''}`}
+                onClick={(e) => handleChordClick(seg.chord!, e)}
+              >
+                {seg.chord}
+              </button>
+            </span>
+          ) : null}
+          <span className="lyrics__words">{seg.text}</span>
+        </span>
       ))}
     </div>
   );

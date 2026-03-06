@@ -3,24 +3,31 @@ import type { ChordSegment, LyricsLine, ParsedSong } from './types';
 const CHORD_REGEX = /\[([^\]]+)\]/g;
 
 /**
- * Parse a ChordPro-style line: "Swing [D]low, sweet [G]chari[D]ot"
- * into segments of { chord, text }.
+ * Parse a ChordPro-style line: "[Fmaj7]I could be the [G7]twist"
+ * Each chord is paired with the text that follows it until the next chord.
+ * So: (Fmaj7, "I could be the "), (G7, "twist"). Leading text without a chord is (null, text).
  */
 function parseLine(line: string): ChordSegment[] {
   const segments: ChordSegment[] = [];
-  let lastIndex = 0;
+  const matches: { chord: string; bracketStart: number; textStart: number }[] = [];
   let match: RegExpExecArray | null;
-
   CHORD_REGEX.lastIndex = 0;
   while ((match = CHORD_REGEX.exec(line)) !== null) {
-    const before = line.slice(lastIndex, match.index);
-    if (before) segments.push({ chord: null, text: before });
-    segments.push({ chord: match[1].trim(), text: '' });
-    lastIndex = match.index + match[0].length;
+    matches.push({
+      chord: match[1].trim(),
+      bracketStart: match.index,
+      textStart: match.index + match[0].length,
+    });
   }
-  const after = line.slice(lastIndex);
-  if (after) segments.push({ chord: null, text: after });
-
+  for (let i = 0; i < matches.length; i++) {
+    const textEnd = i + 1 < matches.length ? matches[i + 1].bracketStart : line.length;
+    const text = line.slice(matches[i].textStart, textEnd);
+    segments.push({ chord: matches[i].chord, text });
+  }
+  if (matches.length > 0 && matches[0].bracketStart > 0) {
+    const leading = line.slice(0, matches[0].bracketStart).trim();
+    if (leading) segments.unshift({ chord: null, text: leading });
+  }
   if (segments.length === 0 && line.trim()) segments.push({ chord: null, text: line });
   return segments;
 }

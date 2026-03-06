@@ -20,7 +20,8 @@
           "rm -rf the-chordinator",
           "git clone \"{{ GitHubRepoUrl }}\" the-chordinator",
           "cd the-chordinator",
-          "docker compose up -d --build || docker-compose up -d --build",
+          "export DOCKER_BUILDKIT=0",
+          "/usr/local/bin/docker-compose up -d --build",
           "echo Deploy complete. App should be on port 8080."
         ]
       }

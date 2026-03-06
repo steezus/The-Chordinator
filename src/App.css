@@ -60,34 +60,38 @@
 }
 
 /* Each segment = chord above (absolute) + text; UkuTabs-style: consistent block width with when it’s played */
+/* Book-like: segment = chord above + words below; segments flow inline and wrap */
 .lyrics__line {
-  margin-bottom: 1rem;
-  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+  text-align: left;
+  max-width: 100%;
 }
 
 .lyrics__line--empty {
   min-height: 1em;
 }
 
-.lyrics__line--grid {
-  align-items: end;
-}
-
-.lyrics__cell {
-  min-width: 0;
+.lyrics__segment {
+  display: inline-block;
+  vertical-align: top;
+  text-align: left;
+  margin-right: 0.15em;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
-.lyrics__cell--chord {
-  font-family: var(--font-mono);
-  font-size: 0.85em;
-  line-height: 1.3;
-  padding-bottom: 0.25rem;
+.lyrics__chord-line {
+  display: block;
+  line-height: 1.25;
+  margin-bottom: 0.15em;
+  min-height: 1.5em;
 }
 
-.lyrics__cell--text {
-  font-size: 1rem;
+.lyrics__words {
+  display: inline;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .lyrics__chord {
@@ -121,6 +125,33 @@
 .lyrics__chord--selected {
   background: var(--accent-dim);
   color: var(--bg);
+}
+
+/* Mobile: readable text, touch-friendly chords, no horizontal scroll */
+@media (max-width: 640px) {
+  .lyrics__content {
+    font-size: 1rem;
+    line-height: 1.7;
+    padding-right: 0;
+  }
+  .lyrics__line {
+    margin-bottom: 1.5rem;
+  }
+  .lyrics__segment {
+    margin-right: 0.2em;
+  }
+  .lyrics__chord {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0.35em 0.5em;
+    font-size: 0.8em;
+  }
+  .lyrics__chord-line {
+    min-height: 1.75em;
+  }
+  .app__main {
+    padding: 1rem;
+  }
 }
 
 /* Chord panel (kept for any reuse) */
