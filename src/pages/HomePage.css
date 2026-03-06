@@ -1,0 +1,152 @@
+.home {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.home__hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.home__brand {
+  margin: 0 0 0.25rem;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.home__tagline {
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.home__search {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 400px;
+  margin: 0 auto 1rem;
+}
+
+.home__search-input {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.home__search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.home__search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.home__search-btn {
+  padding: 0.6rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--bg);
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.home__search-btn:hover {
+  filter: brightness(1.1);
+}
+
+.home__search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.home__search-result-link {
+  display: block;
+  padding: 0.6rem 1rem;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.home__search-result-link:hover {
+  background: var(--surface2);
+  color: var(--accent);
+}
+
+.home__section {
+  margin-bottom: 2rem;
+}
+
+.home__section-head {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.home__section-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.home__section-link:hover {
+  text-decoration: underline;
+}
+
+.home__song-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.home__song-list li {
+  border-bottom: 1px solid var(--border);
+}
+
+.home__song-list li:last-child {
+  border-bottom: none;
+}
+
+.home__song-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.home__song-link:hover {
+  color: var(--accent);
+}
+
+.home__song-title {
+  font-weight: 500;
+}
+
+.home__song-artist {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.home__song-link:hover .home__song-artist {
+  color: var(--text-muted);
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "2.2",
+  "description": "Install Docker and Docker Compose on Amazon Linux for Chordinator. Run once per instance.",
+  "parameters": {},
+  "mainSteps": [
+    {
+      "action": "aws:runShellScript",
+      "name": "installDocker",
+      "inputs": {
+        "runCommand": [
+          "#!/bin/bash",
+          "set -e",
+          "yum update -y",
+          "yum install -y docker",
+          "systemctl enable docker && systemctl start docker",
+          "usermod -aG docker ec2-user",
+          "curl -sL \"https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose",
+          "chmod +x /usr/local/bin/docker-compose",
+          "docker --version",
+          "docker-compose --version",
+          "echo Done. Docker and Docker Compose installed."
+        ]
+      }
+    }
+  ]
+}

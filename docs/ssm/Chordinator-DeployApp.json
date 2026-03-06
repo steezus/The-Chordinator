@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "2.2",
+  "description": "Clone Chordinator repo and run docker compose. Requires Docker already installed (run Chordinator-InstallDocker first).",
+  "parameters": {
+    "GitHubRepoUrl": {
+      "type": "String",
+      "description": "GitHub repo URL to clone (e.g. https://github.com/username/The-Chordinator.git)"
+    }
+  },
+  "mainSteps": [
+    {
+      "action": "aws:runShellScript",
+      "name": "installGitAndClone",
+      "inputs": {
+        "runCommand": [
+          "#!/bin/bash",
+          "set -e",
+          "yum install -y git",
+          "cd /home/ec2-user",
+          "rm -rf the-chordinator",
+          "git clone \"{{ GitHubRepoUrl }}\" the-chordinator",
+          "cd the-chordinator",
+          "docker compose up -d --build || docker-compose up -d --build",
+          "echo Deploy complete. App should be on port 8080."
+        ]
+      }
+    }
+  ]
+}
