@@ -109,6 +109,14 @@ export const PIANO_CHORD_NOTES: Record<string, string[]> = {
 
 const OCTAVE = 4;
 
+/** Normalize chord key for lookup: trim and remove spaces (e.g. "F maj7" -> "Fmaj7"). */
+function normalizeChordKey(s: string): string[] {
+  const t = s.trim();
+  if (!t) return [];
+  const noSpaces = t.replace(/\s+/g, '');
+  return [t, noSpaces, t.toLowerCase(), noSpaces.toLowerCase()];
+}
+
 /**
  * Get piano note keys (e.g. ["C4", "E4", "G4"]) for a chord, using PianoChord.org-style notes when available.
  */
@@ -120,9 +128,15 @@ export function getPianoNotesForChord(chordName: string): string[] {
     const n = PIANO_CHORD_NOTES[key];
     return n?.length ? toNotes(n) : [];
   };
-  const out = get(trimmed) || get(trimmed.toLowerCase());
-  if (out.length) return out;
+  for (const key of normalizeChordKey(trimmed)) {
+    const out = get(key);
+    if (out.length) return out;
+  }
   const slashIdx = trimmed.indexOf('/');
   const base = slashIdx >= 0 ? trimmed.slice(0, slashIdx).trim() : trimmed;
-  return get(base) || get(base.toLowerCase()) || [];
+  for (const key of normalizeChordKey(base)) {
+    const out = get(key);
+    if (out.length) return out;
+  }
+  return [];
 }

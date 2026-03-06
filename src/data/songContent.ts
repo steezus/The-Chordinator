@@ -6,6 +6,96 @@ import { SAMPLE_SONG } from '../sampleSong';
  */
 export const SONG_CONTENT: Record<string, string> = {
   'so-easy': SAMPLE_SONG,
+  'from-the-start': `
+{title: From the Start — Laufey}
+
+# Intro
+Dm G7 Cmaj7
+
+          Dm     G7
+Don't you notice how
+Cmaj7                           Dm   G7
+I get quiet when there's no one else around?
+Cmaj7
+Me and you and awkward silence
+Dm        G7           Em7     A7
+Don't you dare look at me that way
+Dm                            G7
+I don't need reminders of how you don't feel the same
+
+        Dm      G7
+Oh, the burning pain
+Cmaj7                               Dm      G7
+Listening to you harp on 'bout some new soulmate
+Cmaj7
+She's so perfect, blah, blah, blah
+    Dm    G7               Em7    A7
+Oh, how I wish you'll wake up one day
+Dm                               G7
+Run to me, confess your love, at least just let me say
+
+# Chorus
+         Dm          G7
+That when I talk to you
+        Cmaj7
+Oh, Cupid walks right through
+        Dm        G7               Cmaj7
+And shoots an arrow through my heart
+        Dm           G7
+And I sound like a loon
+        Em7       A7
+But don't you feel it too?
+       Dm       G7               Cmaj7
+Confess I loved you from the start
+
+# Instrumental
+Dm G7
+
+# Bridge
+             Cmaj7
+Bi-ya-ba-da
+                Dm     G7     Cmaj7
+Ba-ba-da-ba-da, da-da, da-da
+          Dm        G7
+Bi-ya-di, ya-ba-da
+       Em7             A7
+Ba-bi, ya-da-ba-da-ba, ba-da-ba-di
+          Dm            G7
+Ya-ba-bi, ya-da, da-da
+
+         Dm      G7
+What's a girl to do
+ Cmaj7                     Dm     G7
+Lying on my bed, staring into the blue?
+Cmaj7
+Unrequited, terrifying
+Dm      G7           Em7   A7
+Love is driving me a bit insane
+Dm                             G7
+Have to get this off my chest, I'm telling you today
+
+# Chorus
+         Dm          G7
+That when I talk to you
+        Cmaj7
+Oh, Cupid walks right through
+        Dm        G7               Cmaj7
+And shoots an arrow through my heart
+        Dm           G7
+And I sound like a loon
+        Em7       A7
+But don't you feel it too?
+       Dm       G7               Cmaj7
+Confess I loved you from the start
+
+# Outro
+       Dm       G7
+Confess I loved you
+         Em7         A7
+Just thinking of you
+      Dm          G7               Cmaj7
+I know I've loved you from the start
+`.trim(),
   'amazing-grace': `
 {title: Amazing Grace}
 

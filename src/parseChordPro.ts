@@ -32,6 +32,18 @@ function parseLine(line: string): ChordSegment[] {
   return segments;
 }
 
+/** One chord token: root (A-G #/b) + optional suffix (m, 7, maj7, etc.) */
+const CHORD_TOKEN = /^[A-Ga-g][#b]?(m|maj|min|dim|aug|sus|maj7|m7|7|6|add9|b5)?$/i;
+
+/** True if line has no brackets and is only chord tokens and spaces (two-line format). */
+function isChordOnlyLine(line: string): boolean {
+  const trimmed = line.trim();
+  if (!trimmed || trimmed.includes('[') || trimmed.includes(']')) return false;
+  const tokens = trimmed.split(/\s+/).filter((t) => t.length > 0);
+  if (tokens.length === 0) return false;
+  return tokens.every((t) => CHORD_TOKEN.test(t));
+}
+
 function parseSectionHeader(trimmed: string): string | null {
   const hashMatch = trimmed.match(/^#\s*(.+)$/);
   if (hashMatch) return hashMatch[1].trim();
@@ -58,10 +70,29 @@ export function parseChordPro(raw: string): ParsedSong {
   let artist = '';
   const result: LyricsLine[] = [];
 
-  for (const line of inputLines) {
+  for (let i = 0; i < inputLines.length; i++) {
+    const line = inputLines[i];
     const trimmed = line.trim();
     if (!trimmed) {
       result.push({ segments: [] });
+      continue;
+    }
+    // Two-line format: chord line (no brackets) then lyric line — preserve exact alignment
+    if (isChordOnlyLine(line)) {
+      const nextLine = inputLines[i + 1];
+      const nextTrimmed = nextLine?.trim() ?? '';
+      const nextIsLyric =
+        nextTrimmed.length > 0 &&
+        !nextTrimmed.includes('[') &&
+        parseSectionHeader(nextTrimmed) == null &&
+        !/^Title\s*:|^Artist\s*:|^\{\s*title\s*:/i.test(nextTrimmed) &&
+        !isChordOnlyLine(nextLine ?? '');
+      if (nextIsLyric && nextLine != null) {
+        result.push({ chordLine: line, lyricLine: nextLine });
+        i++;
+        continue;
+      }
+      result.push({ chordLine: line, lyricLine: '' });
       continue;
     }
     // OnSong-style: Title: ... / Artist: ... (skip, don't add to lyrics)
@@ -87,6 +118,11 @@ export function parseChordPro(raw: string): ParsedSong {
       title = titleMatch[1].trim();
       continue;
     }
+    const artistMatch = trimmed.match(/^\{\s*(?:artist|st)\s*:\s*(.+)\s*\}$/i);
+    if (artistMatch) {
+      artist = artistMatch[1].trim();
+      continue;
+    }
     // ChordPro directives: treat as section headers or skip so lyrics/chords stay correct
     const startChorus = trimmed.match(/^\{\s*start_of_chorus\s*\}/i);
     const startVerse = trimmed.match(/^\{\s*start_of_verse\s*\}/i);
@@ -104,9 +140,47 @@ export function parseChordPro(raw: string): ParsedSong {
       result.push({ section: commentSection[1].trim() });
       continue;
     }
-    if (/^\{\s*(comment|text|highlight|font|size|subtitle|artist)\s*[:=]/i.test(trimmed)) continue;
+    if (/^\{\s*(comment|text|highlight|font|size|subtitle)\s*[:=]/i.test(trimmed)) continue;
     if (/^\{\s*[a-z_]+\s*\}$/i.test(trimmed)) continue;
-    result.push({ segments: parseLine(line) });
+
+    const segments = parseLine(line);
+
+    // ChordPro two-line: "[C] [G] [Am]" on one line, "Hello world today" on next → merge so chord sits above word
+    const prev = result[result.length - 1];
+    const prevSegments = prev?.segments;
+    const prevLineIsChordOnly =
+      prevSegments &&
+      prevSegments.length > 0 &&
+      prevSegments.every((s) => s.chord != null && s.text.trim() === '');
+    const isLyricOnlyLine =
+      segments.length === 1 && segments[0].chord === null && segments[0].text.trim() !== '';
+    if (prevLineIsChordOnly && isLyricOnlyLine && prevSegments) {
+      let lyricText = segments[0].text.trim();
+      // If the line before the chord-only line is a single leading fragment (e.g. "The"), prepend it so words stay in phrase order
+      const lineBeforeChord = result.length >= 2 ? result[result.length - 2] : null;
+      const singleLeading =
+        lineBeforeChord?.segments?.length === 1 &&
+        lineBeforeChord.segments[0].chord === null &&
+        lineBeforeChord.segments[0].text.trim() !== '';
+      if (singleLeading && lineBeforeChord?.segments?.[0]) {
+        const leading = lineBeforeChord.segments[0].text.trim();
+        lyricText = leading + (lyricText ? ' ' + lyricText : '');
+        result.pop(); // chord-only line
+        result.pop(); // leading line
+      } else {
+        result.pop(); // chord-only line (we'll push merged in its place)
+      }
+      const chords = prevSegments.map((s) => s.chord!);
+      const words = lyricText.split(/\s+/).filter((w) => w.length > 0);
+      const merged: ChordSegment[] = words.map((w, i) => ({
+        chord: chords[i % chords.length] ?? null,
+        text: i < words.length - 1 ? w + ' ' : w,
+      }));
+      result.push({ segments: merged });
+      continue;
+    }
+
+    result.push({ segments });
   }
 
   if (artist && title !== 'Untitled') title = `${title} — ${artist}`;

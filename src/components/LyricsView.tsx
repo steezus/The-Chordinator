@@ -19,6 +19,12 @@ export function LyricsView({ song, selectedChord, onChordSelect, onChordHover, o
             <h2 key={`section-${lineIdx}`} className="lyrics__section">
               {line.section}:
             </h2>
+          ) : line.chordLine != null ? (
+            <TwoLineBlock
+              key={`line-${lineIdx}`}
+              chordLine={line.chordLine}
+              lyricLine={line.lyricLine ?? ''}
+            />
           ) : (
             <LyricsLine
               key={`line-${lineIdx}`}
@@ -33,6 +39,23 @@ export function LyricsView({ song, selectedChord, onChordSelect, onChordHover, o
         )}
       </div>
     </article>
+  );
+}
+
+/**
+ * Two-line format: chord line above lyric line. Spacing is preserved so chords align with lyrics.
+ * This is the foundation format — paste chord line then lyric line and it displays exactly as provided.
+ */
+function TwoLineBlock({ chordLine, lyricLine }: { chordLine: string; lyricLine: string }) {
+  return (
+    <div className="lyrics__two-line" data-two-line>
+      <pre className="lyrics__chord-line" aria-hidden={!lyricLine}>
+        {chordLine}
+      </pre>
+      {lyricLine ? (
+        <pre className="lyrics__lyric-line">{lyricLine}</pre>
+      ) : null}
+    </div>
   );
 }
 
@@ -78,8 +101,8 @@ function LyricsLine({
     >
       {segments.map((seg, i) => (
         <span key={`${lineIndex}-${i}`} className="lyrics__segment">
-          {seg.chord !== null ? (
-            <span className="lyrics__chord-wrap">
+          <span className={`lyrics__chord-wrap ${seg.chord === null ? 'lyrics__chord-wrap--empty' : ''}`}>
+            {seg.chord !== null ? (
               <button
                 type="button"
                 className={`lyrics__chord ${selectedChord === seg.chord ? 'lyrics__chord--selected' : ''}`}
@@ -90,8 +113,10 @@ function LyricsLine({
               >
                 {seg.chord}
               </button>
-            </span>
-          ) : null}
+            ) : (
+              <span className="lyrics__chord-placeholder" aria-hidden />
+            )}
+          </span>
           <span className="lyrics__words">{seg.text}</span>
         </span>
       ))}

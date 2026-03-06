@@ -4,6 +4,7 @@ node_modules/
 # Build
 dist/
 build/
+tsconfig.tsbuildinfo
 
 # Env and secrets
 .env

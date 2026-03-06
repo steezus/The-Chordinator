@@ -10,6 +10,9 @@ export interface LyricsLine {
   section?: string;
   /** Chord + lyric segments. Omitted when section is set. */
   segments?: ChordSegment[];
+  /** Two-line format: chord line above lyric line (spacing preserved). Use when chord mapping is provided this way. */
+  chordLine?: string;
+  lyricLine?: string;
 }
 
 export interface ParsedSong {

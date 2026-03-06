@@ -11,6 +11,7 @@ export interface SongEntry {
 
 export const SONG_REPOSITORY: SongEntry[] = [
   { title: 'So Easy (To Fall in Love)', artist: 'Olivia Dean', year: 2025, slug: 'so-easy' },
+  { title: 'From the Start', artist: 'Laufey', year: 2023, slug: 'from-the-start' },
   { title: 'Blinding Lights', artist: 'The Weeknd', year: 2020, slug: 'blinding-lights' },
   { title: 'Stand By Me', artist: 'Ben E. King', year: 1961, slug: 'stand-by-me' },
   { title: 'Let It Be', artist: 'The Beatles', year: 1970, slug: 'let-it-be' },

@@ -1,28 +1,11 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { getTopSongs, getRandomSongs, searchSongs, type SongMeta } from '../data/songs';
+import { Link } from 'react-router-dom';
+import { getFavoriteSongs, type SongMeta } from '../data/songs';
 import { useSongCatalog } from '../context/SongCatalogContext';
 import './HomePage.css';
 
-const TOP_N = 5;
-const RANDOM_N = 5;
-
 export function HomePage() {
-  const [query, setQuery] = useState('');
-  const navigate = useNavigate();
   const { catalog } = useSongCatalog();
-  const topSongs = getTopSongs(TOP_N, catalog);
-  const randomSongs = getRandomSongs(RANDOM_N, 42, catalog);
-  const searchResults = query.trim() ? searchSongs(query, 10, catalog) : [];
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = query.trim();
-    if (q) {
-      const results = searchSongs(q, 1, catalog);
-      if (results[0]) navigate(`/song/${results[0].id}`);
-    }
-  };
+  const songs = getFavoriteSongs(catalog);
 
   return (
     <div className="home">
@@ -32,53 +15,12 @@ export function HomePage() {
         <p className="home__import-link">
           <Link to="/piano-reference">Piano chord reference</Link>
         </p>
-        <form className="home__search" onSubmit={handleSearch}>
-          <input
-            type="search"
-            className="home__search-input"
-            placeholder="Search songs..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            aria-label="Search songs"
-          />
-          <button type="submit" className="home__search-btn">
-            Search
-          </button>
-        </form>
-        {searchResults.length > 0 && (
-          <ul className="home__search-results">
-            {searchResults.map((s) => (
-              <li key={s.id}>
-                <Link to={`/song/${s.id}`} className="home__search-result-link">
-                  {s.title} — {s.artist}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
       </section>
 
       <section className="home__section">
-        <h2 className="home__section-head">
-          <Link to="/songs/random" className="home__section-link">
-            99 Random songs
-          </Link>
-        </h2>
+        <h2 className="home__section-head">Songs</h2>
         <ul className="home__song-list">
-          {randomSongs.map((s) => (
-            <SongItem key={s.id} song={s} />
-          ))}
-        </ul>
-      </section>
-
-      <section className="home__section">
-        <h2 className="home__section-head">
-          <Link to="/songs/top" className="home__section-link">
-            99 Top songs
-          </Link>
-        </h2>
-        <ul className="home__song-list">
-          {topSongs.map((s) => (
+          {songs.map((s) => (
             <SongItem key={s.id} song={s} />
           ))}
         </ul>

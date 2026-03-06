@@ -17,6 +17,24 @@ export const SONG_CATALOG: SongMeta[] = SONG_REPOSITORY.map((entry) => ({
   slug: entry.slug,
 }));
 
+/** Slugs for the main "Songs" list on the home page (favorites only). */
+export const FAVORITE_SONGS = [
+  'so-easy',
+  'from-the-start',
+  'amazing-grace',
+  'let-it-be',
+  'stand-by-me',
+  'blinding-lights',
+] as const;
+
+/** Get song metas for the favorite list (only those that exist in catalog). */
+export function getFavoriteSongs(catalog?: SongMeta[] | null): SongMeta[] {
+  const list = getCatalog(catalog);
+  return FAVORITE_SONGS.map((slug) => list.find((s) => s.id === slug || s.slug === slug)).filter(
+    (s): s is SongMeta => s != null
+  );
+}
+
 /** Only songs that have full ChordPro content (not the placeholder). */
 export function filterCatalogToSongsWithContent(
   catalog: SongMeta[],
@@ -47,8 +65,10 @@ export function getSongContent(
   id: string,
   contentMap?: Map<string, string> | null
 ): string {
-  if (contentMap?.has(id)) return contentMap.get(id)!;
   const key = contentKey(id);
+  // Prefer built-in content (e.g. updated So Easy lyrics) over fetched songs.json
+  if (key !== 'default' && SONG_CONTENT[key]) return SONG_CONTENT[key];
+  if (contentMap?.has(id)) return contentMap.get(id)!;
   return SONG_CONTENT[key] ?? SONG_CONTENT['default'];
 }
 
