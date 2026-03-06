@@ -6,6 +6,9 @@ import { SONG_CONTENT } from './songContent';
 
 export type { SongMeta } from './songs.types';
 
+/** Placeholder shown when a song has no ChordPro content. */
+export const DEFAULT_PLACEHOLDER_CONTENT = SONG_CONTENT['default'];
+
 /** Catalog of 100 songs from repository (id = slug). Used when no external songs.json is loaded. */
 export const SONG_CATALOG: SongMeta[] = SONG_REPOSITORY.map((entry) => ({
   id: entry.slug,
@@ -13,6 +16,16 @@ export const SONG_CATALOG: SongMeta[] = SONG_REPOSITORY.map((entry) => ({
   artist: entry.artist,
   slug: entry.slug,
 }));
+
+/** Only songs that have full ChordPro content (not the placeholder). */
+export function filterCatalogToSongsWithContent(
+  catalog: SongMeta[],
+  contentMap?: Map<string, string> | null
+): SongMeta[] {
+  return catalog.filter(
+    (s) => getSongContent(s.id, contentMap ?? undefined) !== DEFAULT_PLACEHOLDER_CONTENT
+  );
+}
 
 /** Content key for an id (e.g. "so-easy-7" -> "so-easy"). */
 function contentKey(id: string): string {

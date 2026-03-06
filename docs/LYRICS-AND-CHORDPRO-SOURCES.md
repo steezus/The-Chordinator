@@ -4,19 +4,15 @@ A short overview of options for getting lyrics and chord charts. **Lyrics are us
 
 ---
 
-## Lyrics On Demand (lyricsondemand.com)
+## Where songs come from
 
-**Lyrics On Demand** has a large lyrics database but **no public API** and often blocks automated requests (403). You can’t fetch lyrics from it programmatically from this app.
+The Chordinator shows **full lyrics with chords mapped above** when ChordPro content is available. Songs get that content from:
 
-**How to use it with The Chordinator:**
+- **Built-in** – A small set of songs in `src/data/songContent.ts`.
+- **ChordPro repos** – The deploy script can fetch `.cho` files from a GitHub repo (e.g. pcderic/chordpro) into `public/songs.json`. See **ChordPro repos** below.
+- **Manual** – Add or edit ChordPro in `songContent.ts` or `public/songs.json`.
 
-1. In the app, go to **Import from Lyrics On Demand** (home page link or `/import`).
-2. Open the song on [lyricsondemand.com](https://www.lyricsondemand.com) in your browser. URLs are like `lyricsondemand.com/artist_name/song_name`.
-3. Copy the lyrics from the page and paste them into the Import form.
-4. Optionally add ChordPro chords (`[G]`, `[C]`, etc.) before the words they’re played on.
-5. Use **Copy ChordPro** and add the result to `songContent.ts` or `public/songs.json`.
-
-This keeps the “gathering” in your browser (manual copy/paste) and uses the app only to format and preview.
+Songs that don’t have ChordPro content yet show a short placeholder (“Lyrics and chords for this song aren’t available yet”) until content is added.
 
 ---
 

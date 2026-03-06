@@ -30,8 +30,6 @@ export function HomePage() {
         <h1 className="home__brand">The Chordinator</h1>
         <p className="home__tagline">Chord diagrams in sync with your lyrics</p>
         <p className="home__import-link">
-          <Link to="/import">Import from Lyrics On Demand</Link>
-          {' · '}
           <Link to="/piano-reference">Piano chord reference</Link>
         </p>
         <form className="home__search" onSubmit={handleSearch}>

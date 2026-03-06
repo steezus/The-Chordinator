@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { SongMeta } from '../data/songs.types';
-import { SONG_CATALOG } from '../data/songs';
+import { SONG_CATALOG, filterCatalogToSongsWithContent } from '../data/songs';
 import { loadSongsJson } from '../data/catalogLoader';
 
 export interface SongCatalogValue {
@@ -18,8 +18,13 @@ export interface SongCatalogValue {
 
 const SongCatalogContext = createContext<SongCatalogValue | null>(null);
 
+/** Only songs that have full ChordPro content are shown in the catalog. */
+function initialCatalog(): SongMeta[] {
+  return filterCatalogToSongsWithContent(SONG_CATALOG, new Map());
+}
+
 export function SongCatalogProvider({ children }: { children: ReactNode }) {
-  const [catalog, setCatalog] = useState<SongMeta[]>(SONG_CATALOG);
+  const [catalog, setCatalog] = useState<SongMeta[]>(() => initialCatalog());
   const [contentMap, setContentMap] = useState<Map<string, string>>(() => new Map());
   const [loaded, setLoaded] = useState(false);
 
@@ -27,14 +32,15 @@ export function SongCatalogProvider({ children }: { children: ReactNode }) {
     loadSongsJson().then((result) => {
       if (result && result.songs.length > 0) {
         const seen = new Set(SONG_CATALOG.map((s) => s.id));
-        const merged = [...SONG_CATALOG];
+        const merged: SongMeta[] = [...SONG_CATALOG];
         for (const s of result.songs) {
           if (!seen.has(s.id)) {
             seen.add(s.id);
             merged.push(s);
           }
         }
-        setCatalog(merged);
+        const contentMapNext = new Map(result.contentMap);
+        setCatalog(filterCatalogToSongsWithContent(merged, contentMapNext));
         setContentMap((prev) => {
           const next = new Map(prev);
           result.contentMap.forEach((v, k) => next.set(k, v));
@@ -61,7 +67,7 @@ export function useSongCatalog(): SongCatalogValue {
   const ctx = useContext(SongCatalogContext);
   if (!ctx) {
     return {
-      catalog: SONG_CATALOG,
+      catalog: initialCatalog(),
       contentMap: new Map(),
       loaded: true,
     };

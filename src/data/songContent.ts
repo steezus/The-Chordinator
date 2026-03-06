@@ -110,7 +110,6 @@ I've been on my [Bb]own for long e[C]nough
   default: `
 {title: Song}
 
-[C]Lyrics and [G]chords will [Am]appear [F]here.
-Transcribe this song in ChordPro format to add full chords.
+[C]Lyrics and [G]chords for [Am]this song [F]aren't available yet.
 `.trim(),
 };
