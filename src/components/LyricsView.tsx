@@ -32,7 +32,8 @@ export function LyricsView({ song, selectedChord, onChordSelect }: LyricsViewPro
 }
 
 /**
- * UkuTabs-style: one row of chords, one row of lyrics. Each column = one segment so the chord sits directly above its phrase.
+ * Paragraph format: each segment is one unit (chord above, words below) in reading order.
+ * Segments flow inline and wrap together so the chord stays above the word it's played on.
  */
 function LyricsLine({
   segments,
@@ -53,36 +54,23 @@ function LyricsLine({
   };
 
   return (
-    <div
-      className="lyrics__line lyrics__line--grid"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${segments.length}, auto)`,
-        gridTemplateRows: 'auto auto',
-        gap: '0 0.5em',
-        alignItems: 'end',
-      }}
-    >
+    <p className="lyrics__line lyrics__line--paragraph">
       {segments.map((seg, i) => (
-        <div key={`chord-${i}`} className="lyrics__cell lyrics__cell--chord">
+        <span key={i} className="lyrics__segment">
           {seg.chord !== null ? (
-            <button
-              type="button"
-              className={`lyrics__chord ${selectedChord === seg.chord ? 'lyrics__chord--selected' : ''}`}
-              onClick={(e) => handleChordClick(seg.chord!, e)}
-            >
-              {seg.chord}
-            </button>
-          ) : (
-            <span className="lyrics__chord-spacer">&#xA0;</span>
-          )}
-        </div>
+            <span className="lyrics__chord-wrap">
+              <button
+                type="button"
+                className={`lyrics__chord ${selectedChord === seg.chord ? 'lyrics__chord--selected' : ''}`}
+                onClick={(e) => handleChordClick(seg.chord!, e)}
+              >
+                {seg.chord}
+              </button>
+            </span>
+          ) : null}
+          <span className="lyrics__words">{seg.text}</span>
+        </span>
       ))}
-      {segments.map((seg, i) => (
-        <div key={`text-${i}`} className="lyrics__cell lyrics__cell--text">
-          {seg.text}
-        </div>
-      ))}
-    </div>
+    </p>
   );
 }

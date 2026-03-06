@@ -4,15 +4,18 @@ import { chordParserFactory } from 'chord-symbol';
 
 const parseChord = chordParserFactory();
 
-/** Map chord-symbol note names (e.g. "Eb", "C#") to piano-chart format (e.g. "Eb4"). */
+/** Map chord-symbol note names (e.g. "Eb", "C#") to piano-chart format (e.g. "Eb4"). Uses normalized.notes from chord-symbol. */
 function chordNameToPianoNotes(chordName: string): string[] {
+  const trimmed = chordName.trim();
+  if (!trimmed) return [];
   try {
-    const parsed = parseChord(chordName);
-    type Parsed = { normalized?: { notes?: string[] }; notes?: string[] };
-    const notes = (parsed as Parsed)?.normalized?.notes ?? (parsed as Parsed)?.notes;
-    if (!notes?.length) return [];
+    const parsed = parseChord(trimmed);
+    if (!parsed || typeof parsed !== 'object') return [];
+    const normalized = (parsed as { normalized?: { notes?: string[] } }).normalized;
+    const notes = normalized?.notes;
+    if (!Array.isArray(notes) || notes.length === 0) return [];
     const octave = 4;
-    return notes.map((noteName) => `${noteName}${octave}`);
+    return notes.map((noteName) => `${String(noteName).trim()}${octave}`);
   } catch {
     return [];
   }

@@ -73,10 +73,10 @@
   margin-top: 0.75rem;
 }
 
-/* Two-row grid: chord line above lyric line */
+/* Paragraph: each line is a paragraph; segments flow in reading order */
 .lyrics__line {
-  margin-bottom: 0.75rem;
-  line-height: 1.55;
+  margin: 0 0 0.85rem;
+  line-height: 1.65;
   text-align: left;
   max-width: 100%;
 }
@@ -85,31 +85,28 @@
   min-height: 0.5em;
 }
 
-.lyrics__line--grid {
-  margin-bottom: 1rem;
-}
-
-.lyrics__cell {
-  min-width: 0;
+.lyrics__line--paragraph {
   white-space: pre-wrap;
   word-break: break-word;
 }
 
-.lyrics__cell--chord {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-  font-weight: 600;
-  line-height: 1.3;
-  padding-bottom: 0.2rem;
-}
-
-.lyrics__cell--text {
-  font-size: 1rem;
-}
-
-.lyrics__chord-spacer {
+/* One segment = chord above + words; segments inline so chord stays above its phrase */
+.lyrics__segment {
   display: inline-block;
-  min-width: 2ch;
+  vertical-align: top;
+  text-align: left;
+  margin-right: 0.1em;
+}
+
+.lyrics__chord-wrap {
+  display: block;
+  line-height: 1.25;
+  margin-bottom: 0.12rem;
+  min-height: 1.4em;
+}
+
+.lyrics__words {
+  display: inline;
 }
 
 .lyrics__chord {
@@ -153,10 +150,7 @@
     padding-right: 0;
   }
   .lyrics__line {
-    margin-bottom: 1.5rem;
-  }
-  .lyrics__cell--text {
-    font-size: 1rem;
+    margin-bottom: 1rem;
   }
   .lyrics__chord {
     min-height: 2.75rem;
@@ -164,7 +158,7 @@
     padding: 0.35em 0.5em;
     font-size: 0.8em;
   }
-  .lyrics__chord-line {
+  .lyrics__chord-wrap {
     min-height: 1.75em;
   }
   .app__main {
